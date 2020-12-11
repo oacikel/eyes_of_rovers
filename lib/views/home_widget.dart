@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:eyes_of_rovers/constants/Constants.dart' as CONSANTS;
-import 'placeholder_widget.dart';
+import 'nasa_image_widget.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,10 +9,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    PlaceholderWidget(Colors.white),
-    PlaceholderWidget(Colors.deepOrange),
-    PlaceholderWidget(Colors.green)
+
+
+   final List<Widget> _children = [
+    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_curiosity)),
+    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_opportunity)),
+    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_spirit))
   ];
 
   @override
