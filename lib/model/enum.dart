@@ -1,0 +1,17 @@
+enum eRoverName {
+  ROVER_CURIOSITY,
+  ROVER_OPPORTUNITY,
+  ROVER_SPIRIT
+}
+
+enum eCamera {
+  FHAZ,
+  RHAZ,
+  MAST,
+  CHEMCAM,
+  MAHLI,
+  MARDI,
+  NAVCAM,
+  PANCAM,
+  MINITES
+}

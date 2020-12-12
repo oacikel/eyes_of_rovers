@@ -1,3 +1,4 @@
+import 'package:eyes_of_rovers/model/mockData.dart';
 import 'package:flutter/material.dart';
 import 'package:eyes_of_rovers/constants/Constants.dart' as CONSANTS;
 import 'nasa_image_widget.dart';
@@ -8,13 +9,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   int _currentIndex = 0;
 
-
    final List<Widget> _children = [
-    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_curiosity)),
-    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_opportunity)),
-    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_spirit))
+    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_curiosity),MockData.getMockCuriosityImages()),
+    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_opportunity),MockData.getMockOpportunityImages()),
+    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_spirit),MockData.getMockSpritImages())
   ];
 
   @override
