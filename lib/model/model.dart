@@ -1,18 +1,16 @@
 import 'package:eyes_of_rovers/model/enum.dart';
 import 'package:flutter/cupertino.dart';
 
-abstract class NasaImage {
-  eRoverName getRoverName();
-  List<eCamera> getCameras();
-  final DateTime earthDate;
-  final int marsDate;
+ class NasaImage {
+  eRoverName getRoverName(){}
+  List<eCamera> getCameras(){}
   final String photoUrl;
 
-  NasaImage(this.earthDate, this.marsDate, this.photoUrl);
+  NasaImage(this.photoUrl);
 }
 
 class CuriosityImage extends NasaImage{
-  CuriosityImage(DateTime earthDate, int marsDate, String photoImage) : super(earthDate, marsDate, photoImage);
+  CuriosityImage(DateTime earthDate, int marsDate, String photoImage) : super(photoImage);
 
   @override
   eRoverName getRoverName() {
@@ -26,7 +24,7 @@ class CuriosityImage extends NasaImage{
 }
 
 class OpportunityImage extends NasaImage{
-  OpportunityImage(DateTime earthDate, int marsDate, String photoImage) : super(earthDate, marsDate, photoImage);
+  OpportunityImage(DateTime earthDate, int marsDate, String photoImage) : super(photoImage);
 
   @override
   eRoverName getRoverName() {
@@ -40,7 +38,7 @@ class OpportunityImage extends NasaImage{
 }
 
 class SpiritImage extends NasaImage{
-  SpiritImage(DateTime earthDate, int marsDate, String photoImage) : super(earthDate, marsDate, photoImage);
+  SpiritImage(DateTime earthDate, int marsDate, String photoImage) : super(photoImage);
 
   @override
   eRoverName getRoverName() {

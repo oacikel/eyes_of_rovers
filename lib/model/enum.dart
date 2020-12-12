@@ -4,6 +4,21 @@ enum eRoverName {
   ROVER_SPIRIT
 }
 
+String getRoverNameForHTTP(eRoverName name){
+  switch (name){
+
+    case eRoverName.ROVER_CURIOSITY:
+      return "curiosity";
+      break;
+    case eRoverName.ROVER_OPPORTUNITY:
+      return "opportunity";
+      break;
+    case eRoverName.ROVER_SPIRIT:
+      return "spirit";
+      break;
+  }
+}
+
 enum eCamera {
   FHAZ,
   RHAZ,
@@ -46,6 +61,39 @@ String getCameraName(eCamera camera){
       break;
     case eCamera.MINITES:
       return "Miniature Thermal Emission";
+      break;
+  }
+}
+
+String getCameraNameForHTTP(eCamera camera){
+  switch (camera){
+
+    case eCamera.FHAZ:
+      return "fhaz";
+      break;
+    case eCamera.RHAZ:
+      return "rhaz";
+      break;
+    case eCamera.MAST:
+      return "mast";
+      break;
+    case eCamera.CHEMCAM:
+      return "chemcam";
+      break;
+    case eCamera.MAHLI:
+      return "mahli";
+      break;
+    case eCamera.MARDI:
+      return "mardi";
+      break;
+    case eCamera.NAVCAM:
+      return "navcam";
+      break;
+    case eCamera.PANCAM:
+      return "pancam";
+      break;
+    case eCamera.MINITES:
+      return "minites";
       break;
   }
 }

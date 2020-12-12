@@ -1,5 +1,6 @@
 import 'package:eyes_of_rovers/model/enum.dart';
 import 'package:eyes_of_rovers/model/mockData.dart';
+import 'package:eyes_of_rovers/model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:eyes_of_rovers/constants/Constants.dart' as CONSANTS;
 import 'nasa_image_widget.dart';
@@ -10,17 +11,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
+  MockData mockData = MockData();
   int _currentIndex = 0;
-
-  final List<Widget> _children = [
-    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_curiosity),
-        MockData.getMockCuriosityImages()),
-    NasaImageWidget(Key(CONSANTS.bottom_nav_bar_item_opportunity),
-        MockData.getMockOpportunityImages()),
-    NasaImageWidget(
-        Key(CONSANTS.bottom_nav_bar_item_spirit), MockData.getMockSpritImages())
-  ];
+  eCamera _selectedCamera=eCamera.FHAZ;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +24,18 @@ class _HomeState extends State<Home> {
           title: Text(CONSANTS.app_name),
           bottom: TabBar(
             isScrollable: true,
-            tabs:_generateTabs(),
+            tabs: _generateTabs(),
+            onTap: (int index) {
+              _onTopTabTapped(index);
+            },
           ),
         ),
-        body: _children[_currentIndex],
+        body: FutureBuilder(
+            future: _getPhotos(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return NasaImageWidget(Key(_currentIndex.toString()),snapshot.data);
+            }
+        ),
         bottomNavigationBar: BottomNavigationBar(
           onTap: _onTabTapped,
           currentIndex: _currentIndex,
@@ -74,15 +75,7 @@ class _HomeState extends State<Home> {
         Tab(text: getCameraName(eCamera.MARDI)),
         Tab(text: getCameraName(eCamera.NAVCAM)),
       ];
-    } else if (_currentIndex == 1 ) {
-      return [
-        Tab(text: getCameraName(eCamera.FHAZ)),
-        Tab(text: getCameraName(eCamera.RHAZ)),
-        Tab(text: getCameraName(eCamera.NAVCAM)),
-        Tab(text: getCameraName(eCamera.PANCAM)),
-        Tab(text: getCameraName(eCamera.MINITES)),
-      ];
-    } else if (_currentIndex == 2) {
+    } else if (_currentIndex == 1 || _currentIndex==2) {
       return [
         Tab(text: getCameraName(eCamera.FHAZ)),
         Tab(text: getCameraName(eCamera.RHAZ)),
@@ -91,5 +84,51 @@ class _HomeState extends State<Home> {
         Tab(text: getCameraName(eCamera.MINITES)),
       ];
     }
+  }
+
+  Future<List<NasaImage>> _getPhotos() async {
+    if (_currentIndex == 0) {
+      return mockData.getListOfPhotos(eRoverName.ROVER_CURIOSITY, 1000, _selectedCamera, 1);
+    } else if (_currentIndex == 1) {
+      return mockData.getListOfPhotos(eRoverName.ROVER_OPPORTUNITY, 1000, _selectedCamera, 1);
+    } else if (_currentIndex == 2) {
+      return mockData.getListOfPhotos(eRoverName.ROVER_SPIRIT, 1000, _selectedCamera, 1);
+    } else {
+      return [];
+    }
+  }
+
+  void _onTopTabTapped(int index) {
+    setState(() {
+      if (_currentIndex == 0) {
+        if (index == 0) {
+          _selectedCamera = eCamera.FHAZ;
+        } else if (index == 1) {
+          _selectedCamera = eCamera.RHAZ;
+        } else if (index == 2) {
+          _selectedCamera = eCamera.MAST;
+        } else if (index == 3) {
+          _selectedCamera = eCamera.CHEMCAM;
+        } else if (index == 4) {
+          _selectedCamera = eCamera.MAHLI;
+        } else if (index == 5) {
+          _selectedCamera = eCamera.MARDI;
+        } else if (index == 6) {
+          _selectedCamera = eCamera.NAVCAM;
+        }
+      } else if (_currentIndex == 1 || _currentIndex==2) {
+        if (index == 0) {
+          _selectedCamera = eCamera.FHAZ;
+        } else if (index == 1) {
+          _selectedCamera = eCamera.RHAZ;
+        } else if (index == 2) {
+          _selectedCamera = eCamera.NAVCAM;
+        } else if (index == 3) {
+          _selectedCamera = eCamera.PANCAM;
+        } else if (index == 4) {
+          _selectedCamera = eCamera.MINITES;
+        }
+      }
+    });
   }
 }
