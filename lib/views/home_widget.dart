@@ -1,5 +1,5 @@
 import 'package:eyes_of_rovers/model/enum.dart';
-import 'package:eyes_of_rovers/model/mockData.dart';
+import 'package:eyes_of_rovers/model/data.dart';
 import 'package:eyes_of_rovers/model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:eyes_of_rovers/constants/Constants.dart' as CONSANTS;
@@ -11,7 +11,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  MockData mockData = MockData();
+  Data mockData = Data();
   int _currentIndex = 0;
   eCamera _selectedCamera=eCamera.FHAZ;
 
@@ -33,7 +33,19 @@ class _HomeState extends State<Home> {
         body: FutureBuilder(
             future: _getPhotos(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return NasaImageWidget(Key(_currentIndex.toString()),snapshot.data);
+              if(snapshot.data is List<NasaImage>){
+                if((snapshot.data as List<NasaImage>).isNotEmpty){
+                  return NasaImageWidget(Key(_currentIndex.toString()),snapshot.data);
+                }else{
+                  return Center(
+                      child: (Text("Looks like there isn't a photo in this list. Try another filter"))
+                  );
+                }
+              }else{
+                return Center(
+                    child: (Text("Error retrieving data at this point please try again later"))
+                );
+              }
             }
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -88,11 +100,11 @@ class _HomeState extends State<Home> {
 
   Future<List<NasaImage>> _getPhotos() async {
     if (_currentIndex == 0) {
-      return mockData.getListOfPhotos(eRoverName.ROVER_CURIOSITY, 1000, _selectedCamera, 1);
+      return mockData.getListOfPhotos(eRoverName.ROVER_CURIOSITY, 365, _selectedCamera, 1);
     } else if (_currentIndex == 1) {
-      return mockData.getListOfPhotos(eRoverName.ROVER_OPPORTUNITY, 1000, _selectedCamera, 1);
+      return mockData.getListOfPhotos(eRoverName.ROVER_OPPORTUNITY, 365, _selectedCamera, 1);
     } else if (_currentIndex == 2) {
-      return mockData.getListOfPhotos(eRoverName.ROVER_SPIRIT, 1000, _selectedCamera, 1);
+      return mockData.getListOfPhotos(eRoverName.ROVER_SPIRIT, 365, _selectedCamera, 1);
     } else {
       return [];
     }
