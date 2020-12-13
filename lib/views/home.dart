@@ -1,11 +1,18 @@
+import 'dart:async';
+
+import 'package:eyes_of_rovers/blocks/auth_bloc.dart';
 import 'package:eyes_of_rovers/model/enum.dart';
 import 'package:eyes_of_rovers/model/data.dart';
 import 'package:eyes_of_rovers/model/model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:eyes_of_rovers/constants/Constants.dart' as CONSANTS;
+import 'package:provider/provider.dart';
+import 'login.dart';
 import 'nasa_image_widget.dart';
 
 class Home extends StatefulWidget {
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -14,9 +21,27 @@ class _HomeState extends State<Home> {
   Data mockData = Data();
   int _currentIndex = 0;
   eCamera _selectedCamera=eCamera.FHAZ;
+  StreamSubscription<FirebaseUser> homeStateSubscription;
+
+  @override
+  void initState() {
+    AuthBloc authBloc =Provider.of<AuthBloc>(context,listen: false);
+    homeStateSubscription=authBloc.currentUser.listen((user) {
+      if(user==null){
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(context)=>Login()));
+      }
+    });
+    super.initState();
+  }
+
+  @override void dispose() {
+    homeStateSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    AuthBloc authbloc=Provider.of<AuthBloc>(context);
     return DefaultTabController(
       length: _generateTabs().length,
       child: Scaffold(
@@ -65,6 +90,19 @@ class _HomeState extends State<Home> {
                 icon: Icon(Icons.airplanemode_active),
                 title: Text(CONSANTS.bottom_nav_bar_item_spirit))
           ],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children:<Widget> [
+              ListTile(
+                title: Text('Log Out'),
+                onTap: () {
+                  authbloc.logout();
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

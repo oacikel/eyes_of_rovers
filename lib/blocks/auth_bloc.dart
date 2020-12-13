@@ -13,24 +13,25 @@ class AuthBloc{
   loginWithFacebook()async{
     debugPrint("${LOG_TAG}Starting login via Facebook");
 
-    final result =await facebookLogin.logIn(
+    final res =await facebookLogin.logIn(
       permissions: [
         FacebookPermission.publicProfile,
         FacebookPermission.email,
       ]
     );
-    switch(result.status){
+    switch(res.status){
 
       case FacebookLoginStatus.Success:
         debugPrint("${LOG_TAG}Login worked");
         //Get Token
-        final FacebookAccessToken facebookToken =result.accessToken;
+        final FacebookAccessToken facebookToken =res.accessToken;
         //Convert to Auth Credential
         final AuthCredential credential =
         FacebookAuthProvider.getCredential(accessToken: facebookToken.token);
 
         //User credential to signin with firebase
-        
+        final result = await authService.signInWithCredential(credential);
+        debugPrint("${LOG_TAG}${result.user.displayName} is logged in");
 
         break;
       case FacebookLoginStatus.Cancel:
@@ -40,5 +41,9 @@ class AuthBloc{
         debugPrint("${LOG_TAG}Error while logging in");
         break;
     }
+  }
+
+  logout(){
+    authService.logout();
   }
 }
