@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
         body: FutureBuilder(
             future: _getPhotos(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(snapshot.data is List<NasaImage>){
+              if(snapshot.data!=null){
                 if((snapshot.data as List<NasaImage>).isNotEmpty){
                   return NasaImageWidget(Key(_currentIndex.toString()),snapshot.data);
                 }else{
