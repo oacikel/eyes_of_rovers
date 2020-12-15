@@ -23,8 +23,11 @@ class _HomeState extends State<Home> {
   final String LOG_TAG ="OCULCAN - HomeState: ";
   Data data = Data();
   int _currentIndex = 0;
+  int _currentSol=365;
   eCamera _selectedCamera = eCamera.FHAZ;
   StreamSubscription<FirebaseUser> homeStateSubscription;
+  StreamController<int> _solController = StreamController<int>();
+
 
   @override
   void initState() {
@@ -34,6 +37,11 @@ class _HomeState extends State<Home> {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => Login()));
       }
+    });
+    _solController.stream.listen((newSol) {
+      setState(() {
+        _currentSol=newSol;
+      });
     });
     super.initState();
   }
@@ -62,11 +70,15 @@ class _HomeState extends State<Home> {
         body: FutureBuilder(
             future: _getPhotos(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              debugPrint("$LOG_TAG Snapshot status: ${snapshot.connectionState}");
               if(snapshot.hasError){
                 var error=snapshot.error as DioError;
                 return Center(
-                    child: (BigMessageWidget(Icons.error,error.message.toString()))
+                    child: Column(
+                      children: [
+                        (BigMessageWidget(Icons.error,error.message.toString())),
+                        SolDayPicker(_solController,_currentSol)
+                      ],
+                    )
                 );
               }else if(snapshot.connectionState==ConnectionState.waiting){
                 return  Center(
@@ -81,8 +93,13 @@ class _HomeState extends State<Home> {
                       Key(_currentIndex.toString()), snapshot.data);
                 } else {
                   return Center(
-                      child: (BigMessageWidget(Icons.warning,
-                          "Looks like there isn't a photo in this list. Try another filter"))
+                      child: Column(
+                        children: [
+                          (BigMessageWidget(Icons.warning,
+                              "Looks like there isn't a photo in this list. Try another filter or pick another sol below.")),
+                          SolDayPicker(_solController,_currentSol)
+                        ],
+                      )
                   );
                 }
               }else{
@@ -159,13 +176,13 @@ class _HomeState extends State<Home> {
    Future <List<NasaImage>>_getPhotos() async {
       if (_currentIndex == 0) {
         return data.getListOfPhotos(
-            eRoverName.ROVER_CURIOSITY, 365, _selectedCamera, 1);
+            eRoverName.ROVER_CURIOSITY, _currentSol, _selectedCamera, 1);
       } else if (_currentIndex == 1) {
         return data.getListOfPhotos(
-            eRoverName.ROVER_OPPORTUNITY, 365, _selectedCamera, 1);
+            eRoverName.ROVER_OPPORTUNITY, _currentSol, _selectedCamera, 1);
       } else if (_currentIndex == 2) {
         return data.getListOfPhotos(
-            eRoverName.ROVER_SPIRIT, 365, _selectedCamera, 1);
+            eRoverName.ROVER_SPIRIT, _currentSol, _selectedCamera, 1);
       } else {
         return [];
       }

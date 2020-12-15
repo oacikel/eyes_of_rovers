@@ -16,9 +16,7 @@ class Data {
   static final String IMAGE_URL_PARAMETER = "img_src";
 
   Future<List<NasaImage>> getListOfPhotos (eRoverName name, int sol, eCamera camera, int page) async {
-
-    debugPrint("${LOG_TAG} Getting photos...");
-
+    debugPrint("${LOG_TAG} Getting photos for sol $page");
     _response = await _dio.get(_generateBaseURL(name), queryParameters: {
       SOL_PARAMETER: sol,
       CAMERA_PARAMETER: getCameraNameForHTTP(camera),
