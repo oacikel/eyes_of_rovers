@@ -26,11 +26,9 @@ class Data {
       API_KEY_PARAMETER: API_KEY
     }).catchError((error) {
       debugPrint("${LOG_TAG} Caught error...");
-      var a=error as DioError;
-      debugPrint("${LOG_TAG} Error message: ${a.message}");
       throw error;
     });
-    debugPrint("${LOG_TAG} Retrieved list of ${_response.toString()}");
+    debugPrint("${LOG_TAG} Retrieved list.");
     List<NasaImage> photos = [];
     for (var photo in _response.data["photos"]) {
       NasaImage image = NasaImage(photo[IMAGE_URL_PARAMETER]);

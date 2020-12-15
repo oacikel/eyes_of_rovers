@@ -15,6 +15,10 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   StreamSubscription<FirebaseUser>loginStateSubscriotion;
+  bool isLoading=false;
+
+
+
   @override
   void initState() {
     AuthBloc authBloc =Provider.of<AuthBloc>(context,listen: false);
@@ -36,16 +40,31 @@ class _LoginState extends State<Login> {
     AuthBloc authBloc =Provider.of<AuthBloc>(context);
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SignInButton(
-              Buttons.Facebook,
-              onPressed: ()=>authBloc.loginWithFacebook()
-            )
-          ],
+        child: _handleFacebookButtonWidget(authBloc)
         ),
-      ),
-    );
+      );
+    }
+
+  Widget _handleFacebookButtonWidget(AuthBloc authBloc){
+    if(isLoading){
+      return (Text("Please wait..."));
+    }else{
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SignInButton(
+              Buttons.Facebook,
+              onPressed: ()=>{
+                setState(() {
+                  isLoading=true;
+                }),
+                authBloc.loginWithFacebook()
+              }
+          ),
+        ],
+      );
+    }
   }
+
 }
+
