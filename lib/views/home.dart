@@ -1,9 +1,11 @@
 import 'dart:async';
 
-import 'package:eyes_of_rovers/blocks/auth_bloc.dart';
+import 'package:dio/dio.dart';
+import 'package:eyes_of_rovers/bloc/auth_bloc.dart';
 import 'package:eyes_of_rovers/model/enum.dart';
 import 'package:eyes_of_rovers/model/data.dart';
 import 'package:eyes_of_rovers/model/model.dart';
+import 'package:eyes_of_rovers/views/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:eyes_of_rovers/constants/Constants.dart' as CONSANTS;
@@ -18,17 +20,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Data mockData = Data();
+  final String LOG_TAG ="OCULCAN - HomeState: ";
+  Data data = Data();
   int _currentIndex = 0;
-  eCamera _selectedCamera=eCamera.FHAZ;
+  eCamera _selectedCamera = eCamera.FHAZ;
   StreamSubscription<FirebaseUser> homeStateSubscription;
 
   @override
   void initState() {
-    AuthBloc authBloc =Provider.of<AuthBloc>(context,listen: false);
-    homeStateSubscription=authBloc.currentUser.listen((user) {
-      if(user==null){
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(context)=>Login()));
+    AuthBloc authBloc = Provider.of<AuthBloc>(context, listen: false);
+    homeStateSubscription = authBloc.currentUser.listen((user) {
+      if (user == null) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => Login()));
       }
     });
     super.initState();
@@ -41,7 +45,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    AuthBloc authbloc=Provider.of<AuthBloc>(context);
+    AuthBloc authbloc = Provider.of<AuthBloc>(context);
     return DefaultTabController(
       length: _generateTabs().length,
       child: Scaffold(
@@ -58,17 +62,33 @@ class _HomeState extends State<Home> {
         body: FutureBuilder(
             future: _getPhotos(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(snapshot.data!=null){
-                if((snapshot.data as List<NasaImage>).isNotEmpty){
-                  return NasaImageWidget(Key(_currentIndex.toString()),snapshot.data);
-                }else{
+              debugPrint("$LOG_TAG Snapshot status: ${snapshot.connectionState}");
+              if(snapshot.hasError){
+                var error=snapshot.error as DioError;
+                return Center(
+                    child: (BigMessageWidget(Icons.error,error.message.toString()))
+                );
+              }else if(snapshot.connectionState==ConnectionState.waiting){
+                return  Center(
+                    child: (BigMessageWidget(Icons.hourglass_full,
+                        "Please wait..."))
+                );}
+              debugPrint("$LOG_TAG snapshot: ${snapshot.toString()}");
+              if (snapshot.data != null) {
+                debugPrint("$LOG_TAG snapshot data is ${snapshot.data.toString()}");
+                if ((snapshot.data as List<NasaImage>).isNotEmpty) {
+                  return NasaImageWidget(
+                      Key(_currentIndex.toString()), snapshot.data);
+                } else {
                   return Center(
-                      child: (Text("Looks like there isn't a photo in this list. Try another filter"))
+                      child: (BigMessageWidget(Icons.warning,
+                          "Looks like there isn't a photo in this list. Try another filter"))
                   );
                 }
               }else{
                 return Center(
-                    child: (Text("Error retrieving data at this point please try again later"))
+                    child: (BigMessageWidget(Icons.error,
+                        "Snapshot is null"))
                 );
               }
             }
@@ -93,7 +113,7 @@ class _HomeState extends State<Home> {
         ),
         drawer: Drawer(
           child: ListView(
-            children:<Widget> [
+            children: <Widget>[
               ListTile(
                 title: Text('Log Out'),
                 onTap: () {
@@ -125,7 +145,7 @@ class _HomeState extends State<Home> {
         Tab(text: getCameraName(eCamera.MARDI)),
         Tab(text: getCameraName(eCamera.NAVCAM)),
       ];
-    } else if (_currentIndex == 1 || _currentIndex==2) {
+    } else if (_currentIndex == 1 || _currentIndex == 2) {
       return [
         Tab(text: getCameraName(eCamera.FHAZ)),
         Tab(text: getCameraName(eCamera.RHAZ)),
@@ -136,16 +156,19 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future<List<NasaImage>> _getPhotos() async {
-    if (_currentIndex == 0) {
-      return mockData.getListOfPhotos(eRoverName.ROVER_CURIOSITY, 365, _selectedCamera, 1);
-    } else if (_currentIndex == 1) {
-      return mockData.getListOfPhotos(eRoverName.ROVER_OPPORTUNITY, 365, _selectedCamera, 1);
-    } else if (_currentIndex == 2) {
-      return mockData.getListOfPhotos(eRoverName.ROVER_SPIRIT, 365, _selectedCamera, 1);
-    } else {
-      return [];
-    }
+   Future <List<NasaImage>>_getPhotos() async {
+      if (_currentIndex == 0) {
+        return data.getListOfPhotos(
+            eRoverName.ROVER_CURIOSITY, 365, _selectedCamera, 1);
+      } else if (_currentIndex == 1) {
+        return data.getListOfPhotos(
+            eRoverName.ROVER_OPPORTUNITY, 365, _selectedCamera, 1);
+      } else if (_currentIndex == 2) {
+        return data.getListOfPhotos(
+            eRoverName.ROVER_SPIRIT, 365, _selectedCamera, 1);
+      } else {
+        return [];
+      }
   }
 
   void _onTopTabTapped(int index) {
@@ -166,7 +189,7 @@ class _HomeState extends State<Home> {
         } else if (index == 6) {
           _selectedCamera = eCamera.NAVCAM;
         }
-      } else if (_currentIndex == 1 || _currentIndex==2) {
+      } else if (_currentIndex == 1 || _currentIndex == 2) {
         if (index == 0) {
           _selectedCamera = eCamera.FHAZ;
         } else if (index == 1) {

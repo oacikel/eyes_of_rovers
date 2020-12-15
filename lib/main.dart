@@ -1,6 +1,6 @@
-import 'package:eyes_of_rovers/blocks/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'bloc/auth_bloc.dart';
 import 'views/login.dart';
 
 void main() {

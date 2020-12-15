@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eyes_of_rovers/blocks/auth_bloc.dart';
+import 'package:eyes_of_rovers/bloc/auth_bloc.dart';
 import 'package:eyes_of_rovers/views/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
