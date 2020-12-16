@@ -85,9 +85,27 @@ class _SolDayPickerState extends State<SolDayPicker> {
       ),
     );
   }
-  void _updateSol(int sol){
-    setState(() {
-      widget._currentSol = sol;
-    });
+}
+
+class BigPhoto extends StatelessWidget {
+  String _url;
+
+  BigPhoto(this._url);
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Container(
+       width: 500,
+       height: 500,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage(_url),
+                fit: BoxFit.contain
+            )
+        ),
+      ),
+    );
   }
 }
+
