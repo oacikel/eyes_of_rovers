@@ -18,8 +18,6 @@ class _LoginState extends State<Login> {
   StreamSubscription<FirebaseUser>loginStateSubscriotion;
   bool isLoading=false;
 
-
-
   @override
   void initState() {
     AuthBloc authBloc =Provider.of<AuthBloc>(context,listen: false);
@@ -63,16 +61,23 @@ class _LoginState extends State<Login> {
                 authBloc.loginWithFacebook().then((value) => updateLoading(value))
               }
           ),
+          Text("or"),
+          RaisedButton(onPressed: () {
+            loginStateSubscriotion.cancel();
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(context)=>Home()));
+          },
+          child: (Text("Guest Mode")),
+          )
         ],
       );
     }
+
   }
-  
+
   void updateLoading(bool a){
     setState(() {
       isLoading=a;
     });
   }
-
 }
 

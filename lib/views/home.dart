@@ -29,13 +29,6 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    AuthBloc authBloc = Provider.of<AuthBloc>(context, listen: false);
-    homeStateSubscription = authBloc.currentUser.listen((user) {
-      if (user == null) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
-      }
-    });
     _solController.stream.listen((newSol) {
       setState(() {
         _currentSol = newSol;
@@ -159,7 +152,7 @@ class _HomeState extends State<Home> {
                   stream: authbloc.currentUser,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return CircularProgressIndicator();
+                      return Center(child: Text("No User Data is Available"));
                     } else {
                       return Column(
                         mainAxisSize: MainAxisSize.max,
@@ -205,6 +198,7 @@ class _HomeState extends State<Home> {
                 leading: Icon(Icons.exit_to_app),
                 title: Text('Log Out'),
                 onTap: () {
+                  startListeningLoginStatus();
                   authbloc.logout();
                   Navigator.pop(context);
                 },
@@ -289,6 +283,16 @@ class _HomeState extends State<Home> {
         } else if (index == 4) {
           _selectedCamera = eCamera.MINITES;
         }
+      }
+    });
+  }
+
+  void startListeningLoginStatus(){
+    AuthBloc authBloc = Provider.of<AuthBloc>(context, listen: false);
+    homeStateSubscription = authBloc.currentUser.listen((user) {
+      if (user == null) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
       }
     });
   }
