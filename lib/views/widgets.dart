@@ -13,26 +13,58 @@ class BigMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          (Icon(
-            icon,
-            color: Colors.grey,
-            size: 80,
-          )),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: (Text(
-              message,
-              textAlign: TextAlign.center,
-            )),
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              (Icon(
+                icon,
+                color: Colors.grey,
+                size: 80,
+              )),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: (Text(
+                  message,
+                  textAlign: TextAlign.center,
+                )),
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
+  }
+}
+
+class BigMultiMessageWidget extends StatelessWidget {
+  final List<Widget> messages;
+  final IconData icon;
+
+  BigMultiMessageWidget(this.icon, this.messages);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              (Icon(
+                icon,
+                color: Colors.grey,
+                size: 80,
+              )),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: messages,
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
 

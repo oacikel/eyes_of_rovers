@@ -1,6 +1,7 @@
 import 'package:eyes_of_rovers/services/service_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 
 class AuthBloc{
@@ -32,6 +33,7 @@ class AuthBloc{
         //User credential to signin with firebase
         final result = await authService.signInWithCredential(credential);
         debugPrint("${LOG_TAG}${result.user.displayName} is logged in");
+        debugPrint("${LOG_TAG}${result.user.photoUrl} is their photo url");
         return true;
         break;
       case FacebookLoginStatus.Cancel:

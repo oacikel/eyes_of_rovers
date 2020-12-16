@@ -69,15 +69,38 @@ class _HomeState extends State<Home> {
         body: FutureBuilder(
             future: _getPhotos(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
+              List<Widget> list = new List<Widget>();
               if (snapshot.hasError) {
                 var error = snapshot.error as DioError;
-                return Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    (BigMessageWidget(Icons.error, error.message.toString())),
-                  ],
-                ));
+                if(error.response!=null && error.response.data!=null ){
+                  Map errorMap =error.response.data as Map;
+
+                  errorMap.forEach((key, value) {
+                    list.add(new Text(value["message"]));
+                  });
+                  return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          (BigMultiMessageWidget(Icons.error, list)),
+                          RaisedButton(onPressed: () { setState(() {}); },
+                            child: Text("RETRY"),
+                          )
+                        ],
+                      ));
+                }else{
+                  return Center(
+                      child: Column(
+                        mainAxisAlignment:MainAxisAlignment.center,
+                        children: [
+                          (BigMessageWidget(
+                              Icons.error, "There has been an error please retry shortly.")),
+                          RaisedButton(onPressed: () { setState(() {}); },
+                            child: Text("RETRY"),
+                          )
+                        ],
+                      ));
+                }
               } else if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                     child: (BigMessageWidget(
