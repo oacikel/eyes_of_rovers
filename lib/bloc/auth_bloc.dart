@@ -10,7 +10,7 @@ class AuthBloc{
 
   Stream<FirebaseUser> get currentUser => authService.currentUser;
 
-  loginWithFacebook()async{
+  Future<bool> loginWithFacebook()async{
     debugPrint("${LOG_TAG}Starting login via Facebook");
 
     final res =await facebookLogin.logIn(
@@ -32,13 +32,15 @@ class AuthBloc{
         //User credential to signin with firebase
         final result = await authService.signInWithCredential(credential);
         debugPrint("${LOG_TAG}${result.user.displayName} is logged in");
-
+        return true;
         break;
       case FacebookLoginStatus.Cancel:
         debugPrint("${LOG_TAG}User canceled");
+        return false;
         break;
       case FacebookLoginStatus.Error:
         debugPrint("${LOG_TAG}Error while logging in");
+        return false;
         break;
     }
   }
