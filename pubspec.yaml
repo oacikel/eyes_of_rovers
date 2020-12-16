@@ -30,6 +30,7 @@ dependencies:
   flutter_signin_button: ^1.1.0
   flutter_login_facebook: ^0.4.0+1
 
+
   flutter:
     sdk: flutter
 
@@ -39,8 +40,15 @@ dependencies:
   cupertino_icons: ^0.1.3
 
 dev_dependencies:
+
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.8.0"
+
+flutter_icons:
+  image_path: "/Users/oacikel/Documents/GitHub/eyes_of_rovers/assets/icons/launcher_icon.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -52,6 +60,11 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/icons/icon_curiosity.png
+    - assets/icons/icon_opportunity.png
+    - assets/icons/icon_spirit.png
+    - assets/icons/launcher_icon.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

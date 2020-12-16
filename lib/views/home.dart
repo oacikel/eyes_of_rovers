@@ -111,15 +111,18 @@ class _HomeState extends State<Home> {
           // this will be set when a new tab is tapped
           items: [
             BottomNavigationBarItem(
-              icon: new Icon(Icons.terrain),
+              icon: Image.asset("assets/icons/icon_curiosity.png",color: Colors.grey,height: 25,),
+              activeIcon: Image.asset("assets/icons/icon_curiosity.png", color: Colors.blue,height: 25,),
               title: new Text(CONSANTS.bottom_nav_bar_item_curiosity),
             ),
             BottomNavigationBarItem(
-              icon: new Icon(Icons.android),
+              icon: Image.asset("assets/icons/icon_opportunity.png",color:Colors.grey,height: 25,),
+              activeIcon: Image.asset("assets/icons/icon_opportunity.png", color: Colors.blue,height: 25,),
               title: new Text(CONSANTS.bottom_nav_bar_item_opportunity),
             ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.airplanemode_active),
+                icon: Image.asset("assets/icons/icon_spirit.png",color: Colors.grey,height: 25,),
+                activeIcon: Image.asset("assets/icons/icon_spirit.png", color: Colors.blue,height: 25,),
                 title: Text(CONSANTS.bottom_nav_bar_item_spirit))
           ],
         ),

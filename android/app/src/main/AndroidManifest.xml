@@ -10,7 +10,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="eyes_of_rovers"
+        android:label="Eyes Of Rovers"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
