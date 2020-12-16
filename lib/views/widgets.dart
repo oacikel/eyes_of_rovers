@@ -15,6 +15,7 @@ class BigMessageWidget extends StatelessWidget {
         child: Padding(
       padding: EdgeInsets.all(16),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           (Icon(
@@ -51,32 +52,35 @@ class _SolDayPickerState extends State<SolDayPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: Column(
-          children: [
-            Text(
-              "Current sol is ${widget._currentSol}.",
-              textAlign: TextAlign.left,
-            ),
-            TextField(
-              controller: numberController,
-              decoration: new InputDecoration(
-                  labelText: "Enter another sol to be searched"),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-              ],
-            ),
-            RaisedButton(
-              child: Text("Go!"),
-              onPressed: () {
-                debugPrint("${LOG_TAG+widget._currentSol.toString()}");
-                widget.streamController.add(int.parse(numberController.text));
-              },
-            ),
-          ],
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            mainAxisSize:MainAxisSize.min,
+            children: [
+              Text(
+                "Current sol is ${widget._currentSol}.",
+                textAlign: TextAlign.left,
+              ),
+              TextField(
+                controller: numberController,
+                decoration: new InputDecoration(
+                    labelText: "Enter another sol to be searched"),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                ],
+              ),
+              RaisedButton(
+                child: Text("Go!"),
+                onPressed: () {
+                  widget.streamController.add(int.parse(numberController.text));
+                  Navigator.maybePop(context,false);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

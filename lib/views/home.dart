@@ -74,9 +74,9 @@ class _HomeState extends State<Home> {
                 var error=snapshot.error as DioError;
                 return Center(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         (BigMessageWidget(Icons.error,error.message.toString())),
-                        SolDayPicker(_solController,_currentSol)
                       ],
                     )
                 );
@@ -129,8 +129,29 @@ class _HomeState extends State<Home> {
           ],
         ),
         drawer: Drawer(
+
           child: ListView(
             children: <Widget>[
+              ListTile(
+                title: Text("Change current sol ($_currentSol)"),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder:(BuildContext context){
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(10.0)),
+                          child: Container(
+                            height: 160,
+                            child: (
+                                SolDayPicker(_solController, _currentSol,)
+                            ),
+                          ),
+                        );
+                      });
+                },
+              ),
               ListTile(
                 title: Text('Log Out'),
                 onTap: () {
