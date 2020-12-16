@@ -14,39 +14,38 @@ import 'login.dart';
 import 'nasa_image_widget.dart';
 
 class Home extends StatefulWidget {
-
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  final String LOG_TAG ="OCULCAN - HomeState: ";
+  final String LOG_TAG = "OCULCAN - HomeState: ";
   Data data = Data();
   int _currentIndex = 0;
-  int _currentSol=365;
+  int _currentSol = 365;
   eCamera _selectedCamera = eCamera.FHAZ;
   StreamSubscription<FirebaseUser> homeStateSubscription;
   StreamController<int> _solController = StreamController<int>();
-
 
   @override
   void initState() {
     AuthBloc authBloc = Provider.of<AuthBloc>(context, listen: false);
     homeStateSubscription = authBloc.currentUser.listen((user) {
       if (user == null) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => Login()));
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
       }
     });
     _solController.stream.listen((newSol) {
       setState(() {
-        _currentSol=newSol;
+        _currentSol = newSol;
       });
     });
     super.initState();
   }
 
-  @override void dispose() {
+  @override
+  void dispose() {
     homeStateSubscription.cancel();
     super.dispose();
   }
@@ -70,46 +69,42 @@ class _HomeState extends State<Home> {
         body: FutureBuilder(
             future: _getPhotos(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(snapshot.hasError){
-                var error=snapshot.error as DioError;
+              if (snapshot.hasError) {
+                var error = snapshot.error as DioError;
                 return Center(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        (BigMessageWidget(Icons.error,error.message.toString())),
-                      ],
-                    )
-                );
-              }else if(snapshot.connectionState==ConnectionState.waiting){
-                return  Center(
-                    child: (BigMessageWidget(Icons.hourglass_full,
-                        "Please wait..."))
-                );}
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    (BigMessageWidget(Icons.error, error.message.toString())),
+                  ],
+                ));
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                    child: (BigMessageWidget(
+                        Icons.hourglass_full, "Please wait...")));
+              }
               debugPrint("$LOG_TAG snapshot: ${snapshot.toString()}");
               if (snapshot.data != null) {
-                debugPrint("$LOG_TAG snapshot data is ${snapshot.data.toString()}");
+                debugPrint(
+                    "$LOG_TAG snapshot data is ${snapshot.data.toString()}");
                 if ((snapshot.data as List<NasaImage>).isNotEmpty) {
                   return NasaImageWidget(
                       Key(_currentIndex.toString()), snapshot.data);
                 } else {
                   return Center(
                       child: Column(
-                        children: [
-                          (BigMessageWidget(Icons.warning,
-                              "Looks like there isn't a photo in this list. Try another filter or pick another sol below.")),
-                          SolDayPicker(_solController,_currentSol)
-                        ],
-                      )
-                  );
+                    children: [
+                      (BigMessageWidget(Icons.warning,
+                          "Looks like there isn't a photo in this list. Try another filter or pick another sol below.")),
+                      SolDayPicker(_solController, _currentSol)
+                    ],
+                  ));
                 }
-              }else{
+              } else {
                 return Center(
-                    child: (BigMessageWidget(Icons.error,
-                        "Snapshot is null"))
-                );
+                    child: (BigMessageWidget(Icons.error, "Snapshot is null")));
               }
-            }
-        ),
+            }),
         bottomNavigationBar: BottomNavigationBar(
           onTap: _onTabTapped,
           currentIndex: _currentIndex,
@@ -129,30 +124,59 @@ class _HomeState extends State<Home> {
           ],
         ),
         drawer: Drawer(
-
           child: ListView(
             children: <Widget>[
+               DrawerHeader(
+                 decoration: BoxDecoration(
+                   color:Theme.of(context).bottomAppBarColor),
+                child: (StreamBuilder<FirebaseUser>(
+                  stream: authbloc.currentUser,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    } else {
+                      return Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(snapshot.data.photoUrl +'?width=400&height=400'),
+                            radius: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(snapshot.data.displayName,
+                            ),
+                          )
+                        ],
+                      );
+                    }
+                  },
+                )),
+              ),
               ListTile(
+                leading: Icon(Icons.date_range),
                 title: Text("Change current sol ($_currentSol)"),
                 onTap: () {
                   showDialog(
                       context: context,
-                      builder:(BuildContext context){
+                      builder: (BuildContext context) {
                         return Dialog(
                           shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.circular(10.0)),
+                              borderRadius: BorderRadius.circular(10.0)),
                           child: Container(
                             height: 160,
-                            child: (
-                                SolDayPicker(_solController, _currentSol,)
-                            ),
+                            child: (SolDayPicker(
+                              _solController,
+                              _currentSol,
+                            )),
                           ),
                         );
                       });
                 },
               ),
               ListTile(
+                leading: Icon(Icons.exit_to_app),
                 title: Text('Log Out'),
                 onTap: () {
                   authbloc.logout();
@@ -194,19 +218,19 @@ class _HomeState extends State<Home> {
     }
   }
 
-   Future <List<NasaImage>>_getPhotos() async {
-      if (_currentIndex == 0) {
-        return data.getListOfPhotos(
-            eRoverName.ROVER_CURIOSITY, _currentSol, _selectedCamera, 1);
-      } else if (_currentIndex == 1) {
-        return data.getListOfPhotos(
-            eRoverName.ROVER_OPPORTUNITY, _currentSol, _selectedCamera, 1);
-      } else if (_currentIndex == 2) {
-        return data.getListOfPhotos(
-            eRoverName.ROVER_SPIRIT, _currentSol, _selectedCamera, 1);
-      } else {
-        return [];
-      }
+  Future<List<NasaImage>> _getPhotos() async {
+    if (_currentIndex == 0) {
+      return data.getListOfPhotos(
+          eRoverName.ROVER_CURIOSITY, _currentSol, _selectedCamera, 1);
+    } else if (_currentIndex == 1) {
+      return data.getListOfPhotos(
+          eRoverName.ROVER_OPPORTUNITY, _currentSol, _selectedCamera, 1);
+    } else if (_currentIndex == 2) {
+      return data.getListOfPhotos(
+          eRoverName.ROVER_SPIRIT, _currentSol, _selectedCamera, 1);
+    } else {
+      return [];
+    }
   }
 
   void _onTopTabTapped(int index) {
