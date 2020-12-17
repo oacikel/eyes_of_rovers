@@ -72,32 +72,38 @@ class _HomeState extends State<Home> {
                     list.add(new Text(value["message"]));
                   });
                   return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          (BigMultiMessageWidget(Icons.error, list)),
-                          RaisedButton(onPressed: () { setState(() {}); },
-                            child: Text("RETRY"),
-                          )
-                        ],
+                      child: Flexible(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            (BigMultiMessageWidget(Icons.error, list)),
+                            RaisedButton(onPressed: () { setState(() {}); },
+                              child: Text("RETRY"),
+                            )
+                          ],
+                        ),
                       ));
                 }else{
                   return Center(
-                      child: Column(
-                        mainAxisAlignment:MainAxisAlignment.center,
-                        children: [
-                          (BigMessageWidget(
-                              Icons.error, "There has been an error please retry shortly.")),
-                          RaisedButton(onPressed: () { setState(() {}); },
-                            child: Text("RETRY"),
-                          )
-                        ],
+                      child: Flexible(
+                        child: Column(
+                          mainAxisAlignment:MainAxisAlignment.center,
+                          children: [
+                            (BigMessageWidget(
+                                Icons.error, "There has been an error please retry shortly.")),
+                            RaisedButton(onPressed: () { setState(() {}); },
+                              child: Text("RETRY"),
+                            )
+                          ],
+                        ),
                       ));
                 }
               } else if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                    child: (BigMessageWidget(
-                        Icons.hourglass_full, "Please wait...")));
+                    child: Flexible(
+                      child: (BigMessageWidget(
+                          Icons.hourglass_full, "Please wait...")),
+                    ));
               }
               debugPrint("$LOG_TAG snapshot: ${snapshot.toString()}");
               if (snapshot.data != null) {
@@ -108,13 +114,15 @@ class _HomeState extends State<Home> {
                       Key(_currentIndex.toString()), snapshot.data);
                 } else {
                   return Center(
-                      child: Column(
+                      child: Flexible(
+                        child: Column(
                     children: [
-                      (BigMessageWidget(Icons.warning,
-                          "Looks like there isn't a photo in this list. Try another filter or pick another sol below.")),
-                      SolDayPicker(_solController, _currentSol)
+                        (BigMessageWidget(Icons.warning,
+                            "Looks like there isn't a photo in this list. Try another filter or pick another sol below.")),
+                        SolDayPicker(_solController, _currentSol)
                     ],
-                  ));
+                  ),
+                      ));
                 }
               } else {
                 return Center(

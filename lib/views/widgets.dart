@@ -14,7 +14,7 @@ class BigMessageWidget extends StatelessWidget {
     return Center(
         child: Padding(
           padding: EdgeInsets.all(16),
-          child: Column(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -23,12 +23,14 @@ class BigMessageWidget extends StatelessWidget {
                 color: Colors.grey,
                 size: 80,
               )),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: (Text(
-                  message,
-                  textAlign: TextAlign.center,
-                )),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: (Text(
+                    message,
+                    textAlign: TextAlign.center,
+                  )),
+                ),
               ),
             ],
           ),
@@ -56,10 +58,12 @@ class BigMultiMessageWidget extends StatelessWidget {
                 color: Colors.grey,
                 size: 80,
               )),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: messages,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: messages,
+                  ),
                 ),
               ),
             ],
@@ -86,30 +90,34 @@ class _SolDayPickerState extends State<SolDayPicker> {
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(4.0),
         child: Center(
           child: Column(
             mainAxisSize:MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Current sol is ${widget._currentSol}.",
-                textAlign: TextAlign.left,
-              ),
-              TextField(
-                controller: numberController,
-                decoration: new InputDecoration(
-                    labelText: "Enter another sol to be searched"),
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: numberController,
+                      decoration: new InputDecoration(
+                        helperText: "Current sol is ${widget._currentSol}.",
+                          labelText: "Enter another sol to be searched"),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                      ],
+                    ),
+                  ),
+                  FloatingActionButton(
+                    child: Text("Go!"),
+                    onPressed: () {
+                      widget.streamController.add(int.parse(numberController.text));
+                      Navigator.maybePop(context,false);
+                    },
+                  ),
                 ],
-              ),
-              RaisedButton(
-                child: Text("Go!"),
-                onPressed: () {
-                  widget.streamController.add(int.parse(numberController.text));
-                  Navigator.maybePop(context,false);
-                },
               ),
             ],
           ),
