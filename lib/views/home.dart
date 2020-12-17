@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             (BigMultiMessageWidget(Icons.error, list)),
-                            RaisedButton(onPressed: () { setState(() {}); },
+                            FloatingActionButton(onPressed: () { setState(() {}); },
                               child: Text("RETRY"),
                             )
                           ],
@@ -113,16 +113,15 @@ class _HomeState extends State<Home> {
                   return NasaImageWidget(
                       Key(_currentIndex.toString()), snapshot.data);
                 } else {
-                  return Center(
-                      child: Flexible(
-                        child: Column(
+                  return SingleChildScrollView(
+                    child: Column(
                     children: [
-                        (BigMessageWidget(Icons.warning,
-                            "Looks like there isn't a photo in this list. Try another filter or pick another sol below.")),
-                        SolDayPicker(_solController, _currentSol)
+                    (BigMessageWidget(Icons.warning,
+                        "Looks like there isn't a photo in this list. Try another filter or pick another sol below.")),
+                    SolDayPicker(_solController, _currentSol)
                     ],
                   ),
-                      ));
+                  );
                 }
               } else {
                 return Center(
