@@ -71,28 +71,30 @@ class _HomeState extends State<Home> {
                   errorMap.forEach((key, value) {
                     list.add(new Text(value["message"]));
                   });
-                  return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          (BigMultiMessageWidget(Icons.error, list)),
-                          RaisedButton(onPressed: () { setState(() {}); },
-                            child: Text("RETRY"),
-                          )
-                        ],
-                      ));
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      (BigMultiMessageWidget(Icons.error, list)),
+                      FloatingActionButton(
+                        elevation: 0,
+                        onPressed: () { setState(() {}); },
+                        child: Text("RETRY"),
+                      )
+                    ],
+                  );
                 }else{
-                  return Center(
-                      child: Column(
-                        mainAxisAlignment:MainAxisAlignment.center,
-                        children: [
-                          (BigMessageWidget(
-                              Icons.error, "There has been an error please retry shortly.")),
-                          RaisedButton(onPressed: () { setState(() {}); },
-                            child: Text("RETRY"),
-                          )
-                        ],
-                      ));
+                  return Column(
+                    mainAxisAlignment:MainAxisAlignment.start,
+                    children: [
+                      (BigMessageWidget(
+                          Icons.error, "There has been an error please retry shortly.")),
+                      FloatingActionButton(
+                        elevation: 0,
+                        onPressed: () { setState(() {}); },
+                        child: Text("RETRY"),
+                      )
+                    ],
+                  );
                 }
               } else if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -107,14 +109,15 @@ class _HomeState extends State<Home> {
                   return NasaImageWidget(
                       Key(_currentIndex.toString()), snapshot.data);
                 } else {
-                  return Center(
-                      child: Column(
+                  return SingleChildScrollView(
+                    child: Column(
                     children: [
-                      (BigMessageWidget(Icons.warning,
-                          "Looks like there isn't a photo in this list. Try another filter or pick another sol below.")),
-                      SolDayPicker(_solController, _currentSol)
+                    (BigMessageWidget(Icons.warning,
+                        "Looks like there isn't a photo in this list. Try another filter or pick another sol below.")),
+                    SolDayPicker(_solController, _currentSol)
                     ],
-                  ));
+                  ),
+                  );
                 }
               } else {
                 return Center(
