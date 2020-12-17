@@ -23,7 +23,8 @@ class BigMessageWidget extends StatelessWidget {
                 color: Colors.grey,
                 size: 80,
               )),
-              Expanded(
+              Flexible(
+                fit: FlexFit.loose,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: (Text(
@@ -49,16 +50,17 @@ class BigMultiMessageWidget extends StatelessWidget {
     return Center(
         child: Padding(
           padding: EdgeInsets.all(16),
-          child: Column(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               (Icon(
                 icon,
                 color: Colors.grey,
                 size: 80,
               )),
-              Expanded(
+              Flexible(
+                fit:FlexFit.loose,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(

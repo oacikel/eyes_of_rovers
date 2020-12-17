@@ -71,39 +71,35 @@ class _HomeState extends State<Home> {
                   errorMap.forEach((key, value) {
                     list.add(new Text(value["message"]));
                   });
-                  return Center(
-                      child: Flexible(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            (BigMultiMessageWidget(Icons.error, list)),
-                            FloatingActionButton(onPressed: () { setState(() {}); },
-                              child: Text("RETRY"),
-                            )
-                          ],
-                        ),
-                      ));
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      (BigMultiMessageWidget(Icons.error, list)),
+                      FloatingActionButton(
+                        elevation: 0,
+                        onPressed: () { setState(() {}); },
+                        child: Text("RETRY"),
+                      )
+                    ],
+                  );
                 }else{
-                  return Center(
-                      child: Flexible(
-                        child: Column(
-                          mainAxisAlignment:MainAxisAlignment.center,
-                          children: [
-                            (BigMessageWidget(
-                                Icons.error, "There has been an error please retry shortly.")),
-                            RaisedButton(onPressed: () { setState(() {}); },
-                              child: Text("RETRY"),
-                            )
-                          ],
-                        ),
-                      ));
+                  return Column(
+                    mainAxisAlignment:MainAxisAlignment.start,
+                    children: [
+                      (BigMessageWidget(
+                          Icons.error, "There has been an error please retry shortly.")),
+                      FloatingActionButton(
+                        elevation: 0,
+                        onPressed: () { setState(() {}); },
+                        child: Text("RETRY"),
+                      )
+                    ],
+                  );
                 }
               } else if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                    child: Flexible(
-                      child: (BigMessageWidget(
-                          Icons.hourglass_full, "Please wait...")),
-                    ));
+                    child: (BigMessageWidget(
+                        Icons.hourglass_full, "Please wait...")));
               }
               debugPrint("$LOG_TAG snapshot: ${snapshot.toString()}");
               if (snapshot.data != null) {
